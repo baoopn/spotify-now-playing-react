@@ -7,6 +7,7 @@ import {
   Link,
   Spinner,
   Progress,
+  Tooltip,
 } from "@chakra-ui/react";
 import getNowPlayingItem from "./SpotifyAPI";
 import SpotifyLogo from "./SpotifyLogo";
@@ -16,7 +17,7 @@ import '../App.css';
 
 const SpotifyNowPlaying = (props) => {
   const [loading, setLoading] = useState(true);
-  const [result, setResult] = useState({});
+  const [track, setTrack] = useState({});
 
   // useEffect hook to fetch the currently playing item at regular intervals
   useEffect(() => {
@@ -26,9 +27,9 @@ const SpotifyNowPlaying = (props) => {
         props.client_id,
         props.client_secret,
         props.refresh_token
-      ).then((result) => {
-        // Update the result state with the fetched data
-        setResult(result);
+      ).then((track) => {
+        // Update the track state with the fetched data
+        setTrack(track);
         // Set loading state to false once data is fetched
         setLoading(false);
       });
@@ -42,47 +43,58 @@ const SpotifyNowPlaying = (props) => {
     <Box width="xs">
       {loading ?
         <Stack align="center" mb={8}>
-          <Spinner size="md" speed="0.6s" thickness={3} color="gray.500" />
+          <Spinner size="md" speed="0.6s" thickness="3" color="gray.500"/>
         </Stack>
         :
-        <Stack width="full" mb={result.isPlaying ? 2 : 4} spacing={3}>
+        <Stack width="full" mb={track.isPlaying ? 2 : 4} spacing={3}>
           <Stack spacing={2} direction="row" align="center">
-            <SpotifyLogo />
-            <Text fontWeight="semibold">{result.isPlaying ? 'Now playing' : "Currently offline"}</Text>
-            {result.isPlaying && <PlayingAnimation />}
+            <SpotifyLogo/>
+            <Text fontWeight="semibold">{track.isPlaying ? 'Now Playing' : 'Currently Offline'}</Text>
+            {track.isPlaying && <PlayingAnimation/>}
           </Stack>
-          {result.isPlaying &&
+          {track.isPlaying &&
             <Box p={4} borderRadius="lg" borderWidth={1}>
               <Stack direction="column" spacing={4} align="center">
-                <Image
-                  alt={`${result.title} album art`}
-                  src={result.albumImageUrl}
-                  width={72}
-                  height={72}
-                  borderRadius="md"
-                />
-                <Stack spacing={0} overflow="hidden" width="full">
-                  <Link href={result.songUrl} target="_blank">
+                <Box position="relative">
+                  <Image
+                    src={track.albumImageUrl}
+                    alt={`${track.title} by ${track.artist}`}
+                    width={64}
+                    height={64}
+                    borderRadius="50%"
+                    className="rotating-disk"
+                  />
+                  <div className="center-circle"></div>
+                  <div className="smaller-white-circle"></div>
+                </Box>
+                <Stack spacing={1} overflow={"hidden"} width="full">
+                  <Tooltip label={track.title} alignSelf="self-start" hasArrow>
+                    <Link href={track.songUrl} alignSelf="self-start" isExternal>
+                      <Text
+                        fontWeight="semibold"
+                        fontSize="x-large"
+                        width="full"
+                        isTruncated
+                        color="alph"
+                      >
+                        {track.title}
+                      </Text>
+                    </Link>
+                  </Tooltip>
+                  <Tooltip label={track.artist} alignSelf="self-start" hasArrow>
                     <Text
-                      fontWeight="semibold"
-                      width="full"
+                      color="gray.500"
                       isTruncated
-                      color="alph"
+                      alignSelf="self-start"
                     >
-                      {result.title}
+                      {track.artist}
                     </Text>
-                  </Link>
-                  <Text
-                    color="gray.500"
-                    isTruncated
-                  >
-                    {result.artist}
-                  </Text>
+                  </Tooltip>
                   <Progress
                     size="xs"
                     colorScheme="green"
                     borderRadius="md"
-                    value={(result.progress_ms / result.duration_ms) * 100}
+                    value={(track.progress_ms / track.duration_ms) * 100}
                   />
                 </Stack>
               </Stack>

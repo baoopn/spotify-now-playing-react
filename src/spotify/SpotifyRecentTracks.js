@@ -6,6 +6,7 @@ import {
   Text,
   Link,
   Spinner,
+  Tooltip,
 } from "@chakra-ui/react";
 import { getRecentlyPlayedTracks } from "./SpotifyAPI";
 import SpotifyLogo from "./SpotifyLogo";
@@ -30,29 +31,30 @@ const SpotifyRecentTracks = (props) => {
   }, [props.client_id, props.client_secret, props.refresh_token]);
 
   return (
-      <Box width="xs">
-        {loading ?
-          <Stack align="center" mb={8}>
-            <Spinner size="md" speed="0.6s" thickness={3} color="gray.500" />
+    <Box width="xs">
+      {loading ?
+        <Stack align="center" mb={8}>
+          <Spinner size="md" speed="0.6s" thickness="3" color="gray.500"/>
+        </Stack>
+        :
+        <Stack width="full" spacing={3}>
+          <Stack spacing={2} direction="row" align="center">
+            <SpotifyLogo/>
+            <Text fontWeight="semibold">Recently Played</Text>
           </Stack>
-          :
-          <Stack width="full" spacing={3}>
-            <Stack spacing={2} direction="row" align="center">
-              <SpotifyLogo />
-              <Text fontWeight="semibold">Recently played</Text>
-            </Stack>
-            {tracks.map((track, index) => (
-              <Box key={index} p={2} borderRadius="lg" borderWidth={1}>
-                <Stack direction="row" spacing={4} align="center">
-                  <Image
-                    alt={`${track.title} album art`}
-                    src={track.albumImageUrl}
-                    width={12}
-                    height={12}
-                    borderRadius="sm"
-                  />
-                  <Stack spacing={0} overflow="hidden">
-                    <Link href={track.songUrl} target="_blank">
+          {tracks.map((track, index) => (
+            <Box key={index} p={2} borderRadius="lg" borderWidth={1}>
+              <Stack direction="row" spacing={4} align="center">
+                <Image
+                  alt={`${track.title} album art`}
+                  src={track.albumImageUrl}
+                  width={12}
+                  height={12}
+                  borderRadius="sm"
+                />
+                <Stack spacing={0} overflow="hidden">
+                  <Tooltip label={track.title} hasArrow>
+                    <Link href={track.songUrl} alignSelf="self-start" isExternal>
                       <Text
                         fontWeight="semibold"
                         width="full"
@@ -62,20 +64,24 @@ const SpotifyRecentTracks = (props) => {
                         {track.title}
                       </Text>
                     </Link>
+                  </Tooltip>
+                  <Tooltip label={track.artist} hasArrow>
                     <Text
                       color="gray.500"
                       isTruncated
+                      alignSelf="self-start"
                     >
                       {track.artist}
                     </Text>
-                    <Text></Text>
-                  </Stack>
+                  </Tooltip>
+                  <Text></Text>
                 </Stack>
-              </Box>
-            ))}
-          </Stack>
-        }
-      </Box>
+              </Stack>
+            </Box>
+          ))}
+        </Stack>
+      }
+    </Box>
   )
 };
 

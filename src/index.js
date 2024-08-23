@@ -1,16 +1,25 @@
-import { ChakraProvider, Box, Flex, Text, Link } from '@chakra-ui/react';
+import { ChakraProvider, extendTheme, Box, Flex, Text, Link } from '@chakra-ui/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SpotifyNowPlaying from './spotify/SpotifyNowPlaying';
 import SpotifyRecentTracks from './spotify/SpotifyRecentTracks';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
-require('dotenv').config();
+import '@fontsource/inter'; // Import Inter font
+// require('dotenv').config();
+
+// Extend the theme to include the Inter font
+const theme = extendTheme({
+  fonts: {
+    heading: 'Inter, sans-serif',
+    body: 'Inter, sans-serif',
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <Box textAlign="right" p={3}>
-        <ColorModeSwitcher initialColorMode="dark" />
+        <ColorModeSwitcher />
       </Box>
 
       <Flex direction="column" justifyContent="center" alignItems="center" minHeight="90vh" mb={6}>
