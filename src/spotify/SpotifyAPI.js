@@ -6,6 +6,17 @@ const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
 const SECRETS_ENDPOINT = `/tokens`;
 
 const fetchTokens = async () => {
+  // Fetch the tokens from environment variables
+  // const { REACT_APP_CLIENT_ID, REACT_APP_CLIENT_SECRET, REACT_APP_REFRESH_TOKEN } = process.env;
+  // if (REACT_APP_CLIENT_ID && REACT_APP_CLIENT_SECRET && REACT_APP_REFRESH_TOKEN) {
+  //   return {
+  //     clientId: REACT_APP_CLIENT_ID,
+  //     clientSecret: REACT_APP_CLIENT_SECRET,
+  //     refreshToken: REACT_APP_REFRESH_TOKEN,
+  //   };
+  // }
+
+  // Fetch the tokens from the server
   const response = await fetch(SECRETS_ENDPOINT);
   if (!response.ok) {
     throw new Error('Failed to fetch tokens');
