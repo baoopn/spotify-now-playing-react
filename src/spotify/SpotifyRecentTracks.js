@@ -8,8 +8,9 @@ import {
   Spinner,
   Tooltip,
 } from "@chakra-ui/react";
-import { getRecentlyPlayedTracks } from "./SpotifyAPI";
+// import { getRecentlyPlayedTracks } from "./SpotifyAPI";
 import SpotifyLogo from "./SpotifyLogo";
+import { RECENTLY_PLAYED_ENDPOINT } from "./Constants";
 
 const SpotifyRecentTracks = (props) => {
   const [loading, setLoading] = useState(true);
@@ -17,18 +18,19 @@ const SpotifyRecentTracks = (props) => {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      getRecentlyPlayedTracks(
-        props.client_id,
-        props.client_secret,
-        props.refresh_token
-      ).then((results) => {
-        setTracks(results);
-        setLoading(false);
-      });
+      fetch(RECENTLY_PLAYED_ENDPOINT)
+        .then(response => response.json())
+        .then(results => {
+          setTracks(results);
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('Error fetching recently played tracks:', error);
+        });
     }, 2000);
 
     return () => clearInterval(intervalId);
-  }, [props.client_id, props.client_secret, props.refresh_token]);
+  }, []);
 
   return (
     <Box width="xs">

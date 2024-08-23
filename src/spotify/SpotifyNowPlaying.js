@@ -9,9 +9,10 @@ import {
   Progress,
   Tooltip,
 } from "@chakra-ui/react";
-import getNowPlayingItem from "./SpotifyAPI";
+// import getNowPlayingItem from "./SpotifyAPI";
 import SpotifyLogo from "./SpotifyLogo";
 import PlayingAnimation from "./PlayingAnimation";
+import { CURRENTLY_PLAYING_ENDPOINT } from "./Constants";
 import '../App.css';
 
 
@@ -23,21 +24,22 @@ const SpotifyNowPlaying = (props) => {
   useEffect(() => {
     // Set up an interval to fetch the currently playing item every 1000 milliseconds
     const intervalId = setInterval(() => {
-      getNowPlayingItem(
-        props.client_id,
-        props.client_secret,
-        props.refresh_token
-      ).then((track) => {
-        // Update the track state with the fetched data
-        setTrack(track);
-        // Set loading state to false once data is fetched
-        setLoading(false);
-      });
+      fetch(CURRENTLY_PLAYING_ENDPOINT)
+        .then(response => response.json())
+        .then(track => {
+          // Update the track state with the fetched data
+          setTrack(track);
+          // Set loading state to false once data is fetched
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('Error fetching currently playing track:', error);
+        });
     }, 1000);
 
-  // Clean up function to clear the interval when the component unmounts or dependencies change
-  return () => clearInterval(intervalId);
-}, [props.client_id, props.client_secret, props.refresh_token]);
+    // Clean up function to clear the interval when the component unmounts or dependencies change
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <Box width="xs">
