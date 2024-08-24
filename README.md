@@ -32,3 +32,15 @@ To sync with your account, you'll need three things from Spotify Developer:
 - Client ID
 - Client secret
 - Refresh token
+
+## Backend
+
+For reference, visit my [spotify-api](https://github.com/baoopn/spotify-api) repository.
+
+## Note
+
+I do ***NOT*** recommend building this Create React App with the `.env` and deploying the static build, as your tokens may be included in one of the built JavaScript files. It’s better to handle token management on the server side for security reasons.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
