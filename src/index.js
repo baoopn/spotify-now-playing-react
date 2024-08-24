@@ -1,11 +1,12 @@
 import { ChakraProvider, extendTheme, Box, Flex, Text, Link } from '@chakra-ui/react';
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom';
-import SpotifyNowPlaying from './spotify/SpotifyNowPlaying';
-import SpotifyRecentTracks from './spotify/SpotifyRecentTracks';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import '@fontsource/inter'; // Import Inter font
-// require('dotenv').config();
+
+// Lazy load the Spotify components
+const SpotifyNowPlaying = lazy(() => import('./spotify/SpotifyNowPlaying'));
+const SpotifyRecentTracks = lazy(() => import('./spotify/SpotifyRecentTracks'));
 
 // Extend the theme to include the Inter font
 const theme = extendTheme({
@@ -31,8 +32,12 @@ ReactDOM.render(
         </Box>
 
         <Flex direction={{ base: "column", md: "row" }} justifyContent="center" alignItems="top" gap={6} overflowY={{ base: "auto", md: "hidden" }} overflowX="auto">
-          <SpotifyNowPlaying />
-          <SpotifyRecentTracks />
+          <Suspense fallback={<div>Loading Now Playing...</div>}>
+            <SpotifyNowPlaying />
+          </Suspense>
+          <Suspense fallback={<div>Loading Recent Tracks...</div>}>
+            <SpotifyRecentTracks />
+          </Suspense>
         </Flex>
       </Flex>
 
