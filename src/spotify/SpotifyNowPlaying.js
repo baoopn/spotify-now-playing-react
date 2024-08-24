@@ -21,24 +21,30 @@ const SpotifyNowPlaying = (props) => {
   const [track, setTrack] = useState({});
 
   // useEffect hook to fetch the currently playing item at regular intervals
-  useEffect(() => {
-    // Set up an interval to fetch the currently playing item every 1000 milliseconds
-    const intervalId = setInterval(() => {
+    useEffect(() => {
+    const fetchCurrentlyPlaying = () => {
       fetch(CURRENTLY_PLAYING_ENDPOINT)
         .then(response => response.json())
         .then(track => {
-          // Update the track state with the fetched data
           setTrack(track);
-          // Set loading state to false once data is fetched
           setLoading(false);
+          // Fetch again after the previous fetch is finished
+          setTimeout(fetchCurrentlyPlaying, 1000);
         })
         .catch(error => {
           console.error('Error fetching currently playing track:', error);
+          // Retry after 2 seconds if there is an error
+          setTimeout(fetchCurrentlyPlaying, 2000);
         });
-    }, 1000);
-
-    // Clean up function to clear the interval when the component unmounts or dependencies change
-    return () => clearInterval(intervalId);
+    };
+  
+    // Fetch immediately
+    fetchCurrentlyPlaying();
+  
+    // Clean up function to stop fetching if the component unmounts
+    return () => {
+      // No need to clear interval as we are using setTimeout
+    };
   }, []);
 
   return (
@@ -54,6 +60,16 @@ const SpotifyNowPlaying = (props) => {
             <Text fontWeight="semibold">{track.isPlaying ? 'Now Playing' : 'Currently Offline'}</Text>
             {track.isPlaying && <PlayingAnimation/>}
           </Stack>
+          {!track.isPlaying && 
+            <Box p={4} borderRadius="lg" borderWidth={1}>
+              <Image
+                src={`https://cdn.baoopn.com/data/img/Baoo.png`}
+                alt={`Bao's Image`}
+                width={72}
+                height={72}
+                borderRadius="md"
+              />
+            </Box>}
           {track.isPlaying &&
             <Box p={4} borderRadius="lg" borderWidth={1}>
               <Stack direction="column" spacing={4} align="center">

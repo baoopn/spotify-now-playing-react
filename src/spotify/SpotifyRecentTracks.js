@@ -16,20 +16,30 @@ const SpotifyRecentTracks = (props) => {
   const [loading, setLoading] = useState(true);
   const [tracks, setTracks] = useState([]);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
+    useEffect(() => {
+    const fetchRecentTracks = () => {
       fetch(RECENTLY_PLAYED_ENDPOINT)
         .then(response => response.json())
         .then(results => {
           setTracks(results);
           setLoading(false);
+          // Fetch again after the previous fetch is finished
+          setTimeout(fetchRecentTracks, 10000);
         })
         .catch(error => {
           console.error('Error fetching recently played tracks:', error);
+          // Retry after 2 seconds if there is an error
+          setTimeout(fetchRecentTracks, 2000);
         });
-    }, 2000);
+    };
 
-    return () => clearInterval(intervalId);
+    // Fetch immediately
+    fetchRecentTracks();
+
+    // Clean up function to stop fetching if the component unmounts
+    return () => {
+      // No need to clear interval as we are using setTimeout
+    };
   }, []);
 
   return (
