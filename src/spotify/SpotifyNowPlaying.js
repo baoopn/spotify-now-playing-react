@@ -69,6 +69,14 @@ const SpotifyNowPlaying = (props) => {
                 height={72}
                 borderRadius="md"
               />
+              <Text
+                fontWeight="semibold"
+                fontSize="lg"
+                width="full"
+                color="alph"
+              >
+                Bao isn't listening to anything right now.
+              </Text>
             </Box>}
           {track.isPlaying &&
             <Box p={4} borderRadius="lg" borderWidth={1}>
