@@ -1,4 +1,4 @@
-import { ChakraProvider, extendTheme, Box, Flex, Text, Link } from '@chakra-ui/react';
+import { ChakraProvider, extendTheme, Box, Flex, Text, Link, Spinner } from '@chakra-ui/react';
 import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
@@ -32,10 +32,10 @@ ReactDOM.render(
         </Box>
 
         <Flex direction={{ base: "column", md: "row" }} justifyContent="center" alignItems="top" gap={6} overflowY={{ base: "auto", md: "hidden" }} overflowX="auto">
-          <Suspense fallback={<div>Loading Now Playing...</div>}>
+          <Suspense fallback={<Spinner size="lg" />}>
             <SpotifyNowPlaying />
           </Suspense>
-          <Suspense fallback={<div>Loading Recent Tracks...</div>}>
+          <Suspense fallback={<Spinner size="lg" />}>
             <SpotifyRecentTracks />
           </Suspense>
         </Flex>
