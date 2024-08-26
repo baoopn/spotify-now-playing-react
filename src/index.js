@@ -32,10 +32,20 @@ ReactDOM.render(
         </Box>
 
         <Flex direction={{ base: "column", md: "row" }} justifyContent="center" alignItems="top" gap={6} overflowY={{ base: "auto", md: "hidden" }} overflowX="auto">
-          <Suspense fallback={<Spinner size="lg" />}>
+          <Suspense fallback={
+            <Flex direction="column" alignItems="center">
+              <Spinner size="md" />
+              <Text mt={2}>Loading Now Playing...</Text>
+            </Flex>
+          }>
             <SpotifyNowPlaying />
           </Suspense>
-          <Suspense fallback={<Spinner size="lg" />}>
+          <Suspense fallback={
+            <Flex direction="column" alignItems="center">
+              <Spinner size="md" />
+              <Text mt={2}>Loading Recent Tracks...</Text>
+            </Flex>
+          }>
             <SpotifyRecentTracks />
           </Suspense>
         </Flex>
